@@ -48,28 +48,29 @@ function Board(){
 
   const getWinner = () => {
     const winLines = [
-      [0,1,2],
-      [0,3,6],
-      [0,4,8],
-      [2,4,6],
-      [1,4,7],
-      [2,5,8],
-      [3,4,5],
-      [6,7,8]
+      [0,1,2], // 0 :horizontal-top
+      [0,3,6], // 1 :vertical-left
+      [0,4,8], // 2 :diagonal-left-to-right
+      [2,4,6], // 3 :diagonal-right-to-left
+      [1,4,7], // 4 :vertical-center
+      [2,5,8], // 5 :vertical-right
+      [3,4,5], // 6 :horizontal-center
+      [6,7,8]  // 7 :horizontal-bottom
     ]
     for (let idx in winLines){
       const [a,b,c] = winLines[idx];
       if(squares[a] && squares[a]===squares[b] && squares[b]===squares[c]){
         return {
           winner : squares[a],
-          winningLine : winLines[idx]
+          winningLine : winLines[idx],
+          winLineIndex : idx
         }
       }
     }
     return null;
   }
 
-  const { winner, winningLine } = getWinner() || {};
+  const { winner, winningLine , winLineIndex} = getWinner() || {};
 
   let winnerColor;
   if(winner === 'X') {
@@ -77,6 +78,37 @@ function Board(){
   }
   else if (winner === 'O') {
     winnerColor = "text-blue-500";
+  }
+
+  let winLineThroughStyles = "hidden";
+  if(winner){
+    let lineThroughColor = winner === 'X' ? "bg-green-300" : "bg-blue-300";
+    switch(winLineIndex){
+      case '0':
+        winLineThroughStyles = `absolute w-[90%] top-[37.5px] h-[5px] ${lineThroughColor}`;
+        break;
+      case '1':
+        winLineThroughStyles = `absolute h-[90%] left-[37.5px] w-[5px] ${lineThroughColor} `;
+        break;
+      case '2':
+        winLineThroughStyles = `absolute w-[105%] h-[5px] ${lineThroughColor} rotate-45`;
+        break;
+      case '3':
+        winLineThroughStyles = `absolute w-[105%] h-[5px] ${lineThroughColor} -rotate-45`;
+        break;
+      case '4':
+        winLineThroughStyles = `absolute h-[90%] left-[117.5px] w-[5px] ${lineThroughColor} `;
+        break;
+      case '5':
+        winLineThroughStyles = `absolute h-[90%] left-[197.5px] w-[5px] ${lineThroughColor} `;
+        break;
+      case '6':
+        winLineThroughStyles = `absolute w-[90%] top-[117.5px] h-[5px] ${lineThroughColor} `;
+        break;
+      case '7':
+        winLineThroughStyles = `absolute w-[90%] top-[197.5px] h-[5px] ${lineThroughColor} `;
+        break;
+    }
   }
   return(
     <>
@@ -96,13 +128,17 @@ function Board(){
       </div>
 
 
-      <div className="grid grid-cols-3 grid-rows-3 gap-0 w-max shadow-lg rounded-xl">
-        {
-        squares.map((elt, idx)=>
-          <Square key={idx} id={idx} squares={squares} setSquares={setSquares} nextPlayer={nextPlayer} setNextPlayer={setNextPlayer} winner={winner} isDraw={isDraw()}  winLine={winningLine}/>
-        )}
+      <div className='w-fit h-fit relative flex justify-center items-center'> 
+      <div id='win-line-through' className={`${winLineThroughStyles}`}></div>
+     
+        <div className= {`grid grid-cols-3 grid-rows-3 gap-0 w-max shadow-lg rounded-xl win-line-through`}>
+          {
+          squares.map((elt, idx)=>
+            <Square key={idx} id={idx} squares={squares} setSquares={setSquares} nextPlayer={nextPlayer} setNextPlayer={setNextPlayer} winner={winner} isDraw={isDraw()}  winLine={winningLine}/>
+          )}
+
       </div>
-      
+      </div>
 
     </>
   );
@@ -143,8 +179,8 @@ function Square({nextPlayer, setNextPlayer, id, squares, setSquares, winner, isD
   if(winner){
     for( let i in winLine){
       if (id == winLine[i]) {
-        belongsToWinLineStyle = "line-through";
-        console.log(id)
+        belongsToWinLineStyle = "";
+
       }
     }
   }
@@ -158,10 +194,6 @@ function Square({nextPlayer, setNextPlayer, id, squares, setSquares, winner, isD
 
 
 function App() {
-
-
-
-
 
   return (
     <>
