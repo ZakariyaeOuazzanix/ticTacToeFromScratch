@@ -42,7 +42,6 @@ function Board(){
       const [a,b,c] = possibleWinLines[idx];
       if(notWinningLine(a,b,c)) count++;
     }
-    console.log(count);
     if (count ==8)  return true
     return false;
   }
@@ -61,17 +60,24 @@ function Board(){
     for (let idx in winLines){
       const [a,b,c] = winLines[idx];
       if(squares[a] && squares[a]===squares[b] && squares[b]===squares[c]){
-        console.log(squares[a]);
-        return squares[a];
+        return {
+          winner : squares[a],
+          winningLine : winLines[idx]
+        }
       }
     }
     return null;
   }
 
-  const winner = getWinner();
+  const { winner, winningLine } = getWinner() || {};
+
   let winnerColor;
-  if(winner === 'X') winnerColor = "text-green-500";
-  else if (winner === 'O') winnerColor = "text-blue-500";
+  if(winner === 'X') {
+    winnerColor = "text-green-500";
+  }
+  else if (winner === 'O') {
+    winnerColor = "text-blue-500";
+  }
   return(
     <>
 
@@ -93,7 +99,7 @@ function Board(){
       <div className="grid grid-cols-3 grid-rows-3 gap-0 w-max shadow-lg rounded-xl">
         {
         squares.map((elt, idx)=>
-          <Square key={idx} id={idx} squares={squares} setSquares={setSquares} nextPlayer={nextPlayer} setNextPlayer={setNextPlayer} winner={winner} isDraw={isDraw()}/>
+          <Square key={idx} id={idx} squares={squares} setSquares={setSquares} nextPlayer={nextPlayer} setNextPlayer={setNextPlayer} winner={winner} isDraw={isDraw()}  winLine={winningLine}/>
         )}
       </div>
       
@@ -103,7 +109,7 @@ function Board(){
 }
 
 
-function Square({nextPlayer, setNextPlayer, id, squares, setSquares, winner, isDraw}){
+function Square({nextPlayer, setNextPlayer, id, squares, setSquares, winner, isDraw, winLine}){
     
   const [squareContent, setSquareContent] = useState('');
   /*console.log('recalled from root!');*/
@@ -133,8 +139,18 @@ function Square({nextPlayer, setNextPlayer, id, squares, setSquares, winner, isD
 
   const txtColor = squareContent ==='X' ? "text-green-600" : "text-blue-600";
 
+  let belongsToWinLineStyle="";
+  if(winner){
+    for( let i in winLine){
+      if (id == winLine[i]) {
+        belongsToWinLineStyle = "line-through";
+        console.log(id)
+      }
+    }
+  }
+
   return(
-    <div className= {`w-20 h-20 bg-green-100 border-r border-b border-gray-300 flex justify-center items-center text-5xl cursor-pointer ${txtColor}`} onClick={handleClick}>{squareContent}</div>
+    <div className= {`w-20 h-20 bg-green-100 border-r border-b  border-gray-300 flex justify-center items-center text-5xl cursor-pointer ${txtColor} ${belongsToWinLineStyle}`} onClick={handleClick}>{squareContent}</div>
     
   );
 }
