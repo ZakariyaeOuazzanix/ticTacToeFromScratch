@@ -1,29 +1,37 @@
 import React, { createContext, useState, useContext } from 'react';
 
 
-export default function Square({nextPlayer, setNextPlayer, id, squares, setSquares, winner, isDraw, winLine}){
+export default function Square({id, winner, isDraw, winLine, gameHistory, setGameHistory, boardDisplayed, setBoardDisplayed}){
     
   function handleClick(){
-
-    if(squares[id] === null && !winner && !isDraw){
-
-      if(nextPlayer === 'X')  {
-        const newSquares = squares.slice();
-        newSquares[id] = 'X';
-        setSquares(newSquares);
-        setNextPlayer('O');
+    if(gameHistory[boardDisplayed][id] === null && !winner && !isDraw){
+      
+      if(boardDisplayed % 2 == 0)  {
+        const newBoard = gameHistory[boardDisplayed].slice();
+        newBoard[id] = 'X';
+        const newGameHistory = gameHistory.slice(0, boardDisplayed + 1);
+        newGameHistory.push(newBoard);
+        setGameHistory(newGameHistory);
+        const newBoardDisplayed = boardDisplayed + 1 
+        setBoardDisplayed(newBoardDisplayed);
+        //setNextPlayer('O');
       }
 
       else  {
-        const newSquares = squares.slice();
-        newSquares[id] = 'O';
-        setSquares(newSquares);
-        setNextPlayer('X');
+        const newBoard = gameHistory[boardDisplayed].slice();
+        newBoard[id] = 'O';
+        const newGameHistory = gameHistory.slice(0, boardDisplayed + 1);
+        newGameHistory.push(newBoard);
+        setGameHistory(newGameHistory);
+        const newBoardDisplayed = boardDisplayed + 1 
+        setBoardDisplayed(newBoardDisplayed);
+        //setNextPlayer('X');
       }
     }
 
   }
-  const txtColor = squares[id] ==='X' ? "text-green-600" : "text-blue-600";
+
+  const txtColor = gameHistory[boardDisplayed][id] ==='X' ? "text-green-600" : "text-blue-600";
 
   let belongsToWinLineStyle="";
   if(winner){
@@ -36,7 +44,7 @@ export default function Square({nextPlayer, setNextPlayer, id, squares, setSquar
   }
 
   return(
-    <div className= {`w-20 h-20 bg-green-100 border-r border-b  border-gray-300 flex justify-center items-center text-5xl cursor-pointer ${txtColor} ${belongsToWinLineStyle}`} onClick={handleClick}>{squares[id]}</div>
+    <div className= {`w-20 h-20 bg-green-100 border-r border-b  border-gray-300 flex justify-center items-center text-5xl cursor-pointer ${txtColor} ${belongsToWinLineStyle}`} onClick={handleClick}>{gameHistory[boardDisplayed][id]}</div>
     
   );
 }

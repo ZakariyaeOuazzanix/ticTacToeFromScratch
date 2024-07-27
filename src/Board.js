@@ -2,20 +2,29 @@ import React, { createContext, useState, useContext } from 'react';
 
 import Square from "./Square";
 
-export default function Board(){
+export default function Board({gameHistory, setGameHistory, boardDisplayed, setBoardDisplayed}){
 
-  const [squares, setSquares] = useState(Array(9).fill(null)) ;
-  const [nextPlayer, setNextPlayer] = useState("X");
+  //const [squares, setSquares] = useState(Array(9).fill(null)) ;
+  //const [nextPlayer, setNextPlayer] = useState("X");
 
 
   function resetBoard(){
-    const newSquares = Array(9).fill(null);
-    setSquares(newSquares);
-    setNextPlayer('X');
+    const newGameHistory = [Array(9).fill(null)];
+    setGameHistory(newGameHistory);
+
+    setBoardDisplayed(0);
+
+    /*const newSquares = Array(9).fill(null);
+    setSquares(newSquares);*/
+    //setNextPlayer('X');
   }
 
+  /*if(boardDisplayed != gameHistory.length -1){
+    const newSquares = gameHistory[boardDisplayed];
+    setSquares(newSquares);
+  }*/
 
-  const textColor = nextPlayer === 'X'? "text-green-500" : "text-blue-500";
+  const textColor = (boardDisplayed % 2 == 0) ? "text-green-500" : "text-blue-500";
 
   function notWinningLine(a,b,c){
     /* for this to be not a winning line definetly, it has to be occupied by at least two non null squares and they have to be of different value */ 
@@ -26,13 +35,13 @@ export default function Board(){
     ]
     for (let i in combinations){
       const [x,y] = combinations[i]
-      if(squares[x] && squares[y] && squares[x] !== squares[y]) return true;
+      if(gameHistory[boardDisplayed][x] && gameHistory[boardDisplayed][y] && gameHistory[boardDisplayed][x] !== gameHistory[boardDisplayed][y]) return true;
     }
     return false;
   }
 
   const isDraw = () => {
-    const nullArr = squares.filter((square) => square == null)
+    const nullArr = gameHistory[boardDisplayed].filter((square) => square == null)
     if (nullArr.length <= 2)  return true;  
     let count = 0;
     const possibleWinLines = [
@@ -66,9 +75,14 @@ export default function Board(){
     ]
     for (let idx in winLines){
       const [a,b,c] = winLines[idx];
-      if(squares[a] && squares[a]===squares[b] && squares[b]===squares[c]){
+
+      /*console.log(boardDisplayed);
+      console.log(gameHistory);
+      console.log(gameHistory[boardDisplayed]);
+      console.log(gameHistory[boardDisplayed][a]);*/
+      if(gameHistory[boardDisplayed][a] && gameHistory[boardDisplayed][a]===gameHistory[boardDisplayed][b] && gameHistory[boardDisplayed][b]===gameHistory[boardDisplayed][c]){
         return {
-          winner : squares[a],
+          winner : gameHistory[boardDisplayed][a],
           winningLine : winLines[idx],
           winLineIndex : idx
         }
@@ -123,7 +137,7 @@ export default function Board(){
       <div className="text-2xl mb-3 flex justify-center items-center font-semibold">
         {
 
-          !winner ? ( !isDraw() ? (<> Next Player : <span className={`text-3xl ml-5 ${textColor}`}>{nextPlayer}</span> </> )
+          !winner ? ( !isDraw() ? (<> Next Player : <span className={`text-3xl ml-5 ${textColor}`}>{boardDisplayed %2 ==0 ? 'X' : 'O'}</span> </> )
                       : <><span className="text-green-500 text-3xl mr-5">X</span> DRAW!<span className="text-blue-500 text-3xl ml-5">O</span></>
           ) : <>Winner : <span className={`text-3xl underline ml-5 ${winnerColor}`}>{winner}</span></>
                     
@@ -137,8 +151,10 @@ export default function Board(){
      
         <div className= {`grid grid-cols-3 grid-rows-3 gap-0 w-max shadow-lg rounded-xl win-line-through`}>
           {
-          squares.map((elt, idx)=>
-            <Square key={idx} id={idx} squares={squares} setSquares={setSquares} nextPlayer={nextPlayer} setNextPlayer={setNextPlayer} winner={winner} isDraw={isDraw()}  winLine={winningLine}/>
+          gameHistory[boardDisplayed].map((elt, idx)=>
+            <Square key={idx} id={idx}
+            winner={winner} isDraw={isDraw()}  winLine={winningLine} gameHistory={gameHistory} 
+            setGameHistory={setGameHistory} boardDisplayed={boardDisplayed} setBoardDisplayed={setBoardDisplayed}/>
           )}
 
       </div>

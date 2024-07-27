@@ -5,22 +5,36 @@ import Board from './Board';
 import Square from './Square';
 
 
-
-
-
-
-
 function App() {
+
+  const [gameHistory, setGameHistory] = useState([Array(9).fill(null)]);
+  const [boardDisplayed, setBoardDisplayed] = useState(0);
+
+  function goToBoard(idx){
+    setBoardDisplayed(idx);
+  }
 
   return (
     <>
 
-      <div className="flex flex-col justify-center items-center min-h-screen">
+      <div className='flex gap-x-20 justify-center items-center min-h-screen min-w-fit'>
+        <div className="flex flex-col">
+            <Board gameHistory={gameHistory} setGameHistory={setGameHistory} 
+            boardDisplayed={boardDisplayed} setBoardDisplayed={setBoardDisplayed}/>    
+        </div>
+
+        <ol>
+        {gameHistory.map(
+          (board,idx) => 
+          
+          <li key={idx}><button onClick={() => goToBoard(idx)}>Go to move #{idx}</button></li>)
         
-          <Board/>
-            
+        }
+        </ol>
+        <div className=''></div>
       </div>
-      
+
+
     </>
     
   );
