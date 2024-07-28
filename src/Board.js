@@ -42,7 +42,7 @@ export default function Board({gameHistory, setGameHistory, boardDisplayed, setB
 
   const isDraw = () => {
     const nullArr = gameHistory[boardDisplayed].filter((square) => square == null)
-    if (nullArr.length <= 2)  return true;  
+    if (nullArr.length <= 1)  return true;  
     let count = 0;
     const possibleWinLines = [
       [0,1,2],
