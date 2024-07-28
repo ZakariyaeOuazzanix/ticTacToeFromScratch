@@ -26,8 +26,17 @@ function App() {
         <ol>
         {gameHistory.map(
           (board,idx) => 
+          (
+           
+            idx == 0 ? (<li className="text-black" key={idx}><button onClick={() => goToBoard(idx)}>Go to game start</button></li>)
+
+            
+            : (<li className={`${idx % 2 ==1 ? "text-green-500" : "text-blue-500"}`} key={idx}><button onClick={() => goToBoard(idx)}>Go to move #{idx}</button></li>)
+
+           
+          )
           
-          <li key={idx}><button onClick={() => goToBoard(idx)}>Go to move #{idx}</button></li>)
+          )
         
         }
         </ol>
