@@ -3,126 +3,58 @@ import './App.css';*/
 import React, { createContext, useState, useContext } from 'react';
 import Board from './Board';
 import Square from './Square';
+import Game from './Game';
 
 
 function App() {
 
-  const [gameHistory, setGameHistory] = useState([Array(9).fill(null)]);
-  const [boardDisplayed, setBoardDisplayed] = useState(0);
-  const [ascendingHistoryDisplay, setAscendingHistoryDisplay] = useState(true);
+const [gameDisplayed, setGameDisplayed] = useState(null);
 
-  function toggleMovesOrder(){
-    const newOrderDisplay = ! ascendingHistoryDisplay;
-    setAscendingHistoryDisplay(newOrderDisplay);
+  function chooseGame(chosen){
+    setGameDisplayed(chosen);
   }
 
-  function getChangedIndex(arr1, arr2){
-    for (let idx in arr1){
-      if(arr1[idx] !== arr2[idx]) return idx
+  function displayExcuse(game){
+    return (
+      <>
+        <div className='flex flex-col justify-center items-center gap-y-40 mt-20'>
+          <div className='text-xl'>Sorry no {game} game yet !</div>
+          <button className='underline self-start text-lg text-blue-600 hover:text-purple-500' onClick={() => setGameDisplayed(null)}>&lt; Go back</button>
+        </div>
+      </>
+    );
+  }
+
+  function renderGames(){
+    switch (gameDisplayed){
+      case 0:
+        return displayExcuse('chess');
+      case 1:
+        return (
+        <>
+          <button className='underline mt-4 text-lg text-blue-600 hover:text-purple-500' onClick={() => setGameDisplayed(null)}>&lt; Go back</button>
+          <Game />
+        </> 
+        );
+      default:
+        return (
+          <div className='flex flex-col items-center justify-center gap-y-10 min-h-screen'>
+            <div className='text-lg'>Choose the Game you want to play : </div>
+            <button className='bg-blue-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl'  onClick={() => chooseGame(0)}>Chess Game</button>
+            <button className='bg-green-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl' onClick={() => chooseGame(1)}>Tic tac toe Game</button>
+          </div>
+        );
     }
+    
   }
 
-  function getRowsCols(indexesOfChangedSquares){
-    const rowsColsArray = [];
-    for (let i in indexesOfChangedSquares){
-      let rowCol;
-      switch(indexesOfChangedSquares[i]){
-        case '0':
-          rowCol = [1,1];
-          break;
-        case '1':
-          rowCol = [1,2];
-          break;
-        case '2':
-          rowCol = [1,3];
-          break;
-        case '3':
-          rowCol = [2,1];
-          break;
-        case '4':
-          rowCol = [2,2];
-          break;
-        case '5':
-          rowCol = [2,3];
-          break;
-        case '6':
-          rowCol = [3,1];
-          break;
-        case '7':
-          rowCol = [3,2];
-          break;
-        case '8':
-          rowCol = [3,3] ;
-          break;
-      }
-      //console.log('idx[i] : ' + indexesOfChangedSquares[i]);
-      rowsColsArray.push(rowCol);
-    }
-    return rowsColsArray;
-  }
-
-
-  function getMovesList(){
-    let indexesOfChangedSquares = [];
-    for (let index = 1; index <gameHistory.length; index++){
-      indexesOfChangedSquares.push(getChangedIndex(gameHistory[index -1], gameHistory[index]));
-    } 
-    //console.log(indexesOfChangedSquares);
-    const rowsColsChangedSquares = getRowsCols(indexesOfChangedSquares);
-    //console.log(rowsColsChangedSquares);
-
-    return gameHistory.map(
-      (board,idx) => 
-      
-      
-      (
-        idx == 0 ? (<li className="text-black" key={idx}><button onClick={() => goToBoard(idx)}>Go to game start</button></li>)
-
-        
-        : idx == boardDisplayed ? (<li className={`${idx % 2 ==1 ? "text-green-500" : "text-blue-500"}`} key={idx}>You are at move #{idx} {`(${rowsColsChangedSquares[idx -1][0]},${rowsColsChangedSquares[idx -1][1]})`}</li>)
-        
-        : (<li className={`${idx % 2 ==1 ? "text-green-500" : "text-blue-500"}`} key={idx}><button onClick={() => goToBoard(idx)}>Go to move #{idx} {`(${rowsColsChangedSquares[idx -1][0]},${rowsColsChangedSquares[idx -1][1]})`}</button></li>)
-
-      )
-      
-      
-      );
-  }
-
-  function goToBoard(idx){
-    setBoardDisplayed(idx);
-  }
-
-  
   return (
     <>
-
-      <div className='flex gap-x-20 justify-center items-center min-h-screen min-w-fit'>
-        <div className="flex flex-col">
-            <Board gameHistory={gameHistory} setGameHistory={setGameHistory} 
-            boardDisplayed={boardDisplayed} setBoardDisplayed={setBoardDisplayed}/>    
-        </div>
-
-        <div>
-          <button onClick={toggleMovesOrder}>Reverse display</button>
-          <ol>
-          {
-          ascendingHistoryDisplay ? getMovesList() : getMovesList().slice().reverse()
-          
-        }
-
-          </ol>
-        </div>
-        
-        <div className=''></div>
-      </div>
-
-
+      {renderGames()}
     </>
-    
   );
-
-
+ 
+  
 }
 
 export default App;
