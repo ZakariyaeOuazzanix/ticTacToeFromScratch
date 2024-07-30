@@ -6,6 +6,7 @@ export default function TicTacToeGame(){
   const [gameHistory, setGameHistory] = useState([Array(9).fill(null)]);
   const [boardDisplayed, setBoardDisplayed] = useState(0);
   const [ascendingHistoryDisplay, setAscendingHistoryDisplay] = useState(true);
+  const [computerIsPlaying, setComputerIsPlaying] = useState(false);
 
   function toggleMovesOrder(){
     const newOrderDisplay = ! ascendingHistoryDisplay;
@@ -89,14 +90,23 @@ export default function TicTacToeGame(){
     setBoardDisplayed(idx);
   }
 
+  function togglePlayComputer(){
+    computerIsPlaying ? setComputerIsPlaying(false) : setComputerIsPlaying(true);
+  }
+
   
   return (
     <>
-
+     <div className='mb-10'>
+        <button onClick={togglePlayComputer}>{computerIsPlaying ? 'Turn off computer' : 'Play with computer'}
+        </button>
+      </div> 
       <div className='flex gap-x-20 justify-center items-center min-h-screen min-w-fit'>
         <div className="flex flex-col">
             <Board gameHistory={gameHistory} setGameHistory={setGameHistory} 
-            boardDisplayed={boardDisplayed} setBoardDisplayed={setBoardDisplayed}/>    
+            boardDisplayed={boardDisplayed} setBoardDisplayed={setBoardDisplayed}
+            computerIsPlaying={computerIsPlaying} setComputerIsPlaying={setComputerIsPlaying}
+            />    
         </div>
 
         <div>

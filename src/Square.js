@@ -1,7 +1,8 @@
 import React, { createContext, useState, useContext } from 'react';
 
 
-export default function Square({id, winner, isDraw, winLine, gameHistory, setGameHistory, boardDisplayed, setBoardDisplayed}){
+export default function Square({id, winner, isDraw, winLine, gameHistory, setGameHistory,
+   boardDisplayed, setBoardDisplayed, computerIsPlaying, setComputerIsPlaying}){
     
   function handleClick(){
     if(gameHistory[boardDisplayed][id] === null && !winner && !isDraw){
@@ -27,9 +28,14 @@ export default function Square({id, winner, isDraw, winLine, gameHistory, setGam
         setBoardDisplayed(newBoardDisplayed);
         //setNextPlayer('X');
       }
+
+       
+      
     }
 
   }
+
+
 
   const txtColor = gameHistory[boardDisplayed][id] ==='X' ? "text-green-600" : "text-blue-600";
 
