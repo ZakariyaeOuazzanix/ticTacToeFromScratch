@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext } from 'react';
 import Board from './Board';
 import Square from './Square';
 
-export default function Game(){
+export default function TicTacToeGame(){
   const [gameHistory, setGameHistory] = useState([Array(9).fill(null)]);
   const [boardDisplayed, setBoardDisplayed] = useState(0);
   const [ascendingHistoryDisplay, setAscendingHistoryDisplay] = useState(true);
