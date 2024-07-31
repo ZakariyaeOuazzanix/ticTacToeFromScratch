@@ -6,6 +6,7 @@ import Square from './Square';
 import TicTacToeGame from './TicTacToeGame';
 import CircleGenerator from './CircleGenerator';
 import GraphGenerator from './GraphGenerator';
+import { SolarSystem } from './SolarSystem';
 function App() {
 
 const [gameDisplayed, setGameDisplayed] = useState(null);
@@ -50,6 +51,13 @@ const [gameDisplayed, setGameDisplayed] = useState(null);
             <GraphGenerator />
           </> 
           );
+      case 4:
+        return (
+          <>
+            <button className='z-50 underline mt-4 text-lg text-blue-600 hover:text-purple-500' onClick={() => setGameDisplayed(null)}>&lt; Go back</button>
+            <SolarSystem/>
+          </> 
+          );
       default:
         return (
           <div className='flex flex-col items-center justify-center gap-y-10 min-h-screen'>
@@ -57,7 +65,8 @@ const [gameDisplayed, setGameDisplayed] = useState(null);
             <button className='bg-blue-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl'  onClick={() => chooseGame(0)}>Chess Game</button>
             <button className='bg-green-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl' onClick={() => chooseGame(1)}>Tic tac toe Game</button>
             <button className='bg-orange-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl' onClick={() => chooseGame(2)}>Circle generator</button>
-            <button className='bg-yellow-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl' onClick={() => chooseGame(3)}>Graph generator</button>
+            <button className='bg-red-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl' onClick={() => chooseGame(3)}>Graph generator</button>
+            <button className='bg-red-400 text-white p-4 rounded-md hover:scale-125 duration-300 text-xl' onClick={() => chooseGame(4)}>Solar System real comparisons</button>
 
           </div>
         );
